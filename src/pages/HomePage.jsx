@@ -30,7 +30,7 @@ export default function HomePage() {
     })();
   }, []);
 
-  const filteredNotes = notes.filter((note) =>
+  const filteredNotes = notes?.filter((note) =>
     note.title.toLowerCase().includes(keyword.toLowerCase()),
   );
 
