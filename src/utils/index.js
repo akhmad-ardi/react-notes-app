@@ -1,11 +1,11 @@
-const showFormattedDate = (date) => {
+const showFormattedDate = (data, language) => {
   const options = {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   };
-  return new Date(date).toLocaleDateString('id-ID', options);
+  return new Date(data).toLocaleDateString(language, options);
 };
 
 export { showFormattedDate };

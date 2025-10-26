@@ -1,20 +1,39 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCheck } from "react-icons/fa";
-import { addNote } from "../utils/local-data";
+import { FaCheck, FaSpinner } from "react-icons/fa";
+import PropTypes from "prop-types";
+import { LanguageContext } from "../contexts/LanguageContext";
+import { translations } from "../utils/translations";
+import { addNote } from "../utils/network-data";
 
-export default function AddNote() {
+function AddNote({ setLoadingPage }) {
   const navigate = useNavigate();
 
+  const { language } = React.useContext(LanguageContext);
+  const t = translations[language];
+
+  const [loading, setLoading] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [body, setBody] = React.useState("");
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  React.useEffect(() => {
+    setLoadingPage(loading);
+  }, [loading]);
 
-    addNote({ title, body });
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setLoading(true);
+
+    const response = await addNote({ title, body });
+    if (response.error) {
+      alert(response.error);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
     navigate("/");
-    alert("Berhasil menambahkan catatan");
+    alert(t.addNoteSuccess);
   }
 
   return (
@@ -22,14 +41,14 @@ export default function AddNote() {
       <div className="add-new-page__input">
         <input
           className="add-new-page__input__title"
-          placeholder="Catatan rahasia"
+          placeholder={`${t.placeholderAddNoteTitle}...`}
           onChange={(e) => setTitle(e.target.value)}
           value={title}
         />
         <div
           className="add-new-page__input__body"
           contentEditable="true"
-          data-placeholder="Sebenarnya saya adalah ...."
+          data-placeholder={`${t.placeholderAddNoteBody}...`}
           onInput={(e) => setBody(e.target.innerText)}
           value={body}
         ></div>
@@ -37,11 +56,18 @@ export default function AddNote() {
 
       <button
         type="submit"
-        className="homepage__action action"
+        className="add-new-page__action action"
         style={{ right: "96px" }}
+        disabled={loading}
       >
-        <FaCheck />
+        {loading ? <FaSpinner className="spinner" /> : <FaCheck />}
       </button>
     </form>
   );
 }
+
+AddNote.propTypes = {
+  setLoadingPage: PropTypes.func.isRequired,
+};
+
+export default AddNote;

@@ -1,22 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaSpinner } from "react-icons/fa";
 import AddNote from "../components/AddNote";
 
 export default function AddNotePage() {
   const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(false);
 
   return (
     <div>
       <section className="add-note-page">
-        <AddNote />
+        <AddNote setLoadingPage={setLoading} />
 
         <button
-          className="homepage__action action"
+          className="add-new-page__action action"
           style={{ color: "white", backgroundColor: "red" }}
           onClick={() => navigate("/")}
+          disabled={loading}
         >
-          <FaHome />
+          {loading ? <FaSpinner className="spinner" /> : <FaHome />}
         </button>
       </section>
     </div>

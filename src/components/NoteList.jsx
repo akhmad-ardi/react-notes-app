@@ -1,9 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { LanguageContext } from "../contexts/LanguageContext";
 import { showFormattedDate } from "../utils/index";
 
 function NoteList({ notes }) {
+  const { language } = React.useContext(LanguageContext);
+
   return (
     <>
       {notes.length ? (
@@ -14,7 +17,10 @@ function NoteList({ notes }) {
                 <Link to={`/notes/${note.id}`}>{note.title}</Link>
               </h3>
               <p className="note-item__createdAt">
-                {showFormattedDate(note.createdAt)}
+                {showFormattedDate(
+                  note.createdAt,
+                  language === "id" ? "id-ID" : "en-US",
+                )}
               </p>
               <p className="note-item__body">{note.body}</p>
             </article>
